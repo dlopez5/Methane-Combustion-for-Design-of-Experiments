@@ -56,13 +56,13 @@ def reac_sens():
     rows = reduce_resolution(rows1,500) #isnt rows 1 always going to have a length of 1?
     pts=len(rows)
     t_T_P_AMol = [rows[i][0:4] for i in range(0,pts)] 
-#    t_T_P_AMol = reduce_resolution(t_T_P_AMol,100) 
+    t_T_P_AMol = reduce_resolution(t_T_P_AMol,100) 
     
     t_SMol = [[rows[i][0],rows[i][4]] for i in range(0,pts)]  
-#    t_SMol = reduce_resolution(t_SMol,100) 
+    t_SMol = reduce_resolution(t_SMol,100) 
     
     t_AllSpecieSens = [[rows[i][0],rows[i][5]] for i in range(0,pts)]
-#    t_AllSpecieSens = reduce_resolution(t_AllSpecieSens,100)
+    t_AllSpecieSens = reduce_resolution(t_AllSpecieSens,100)
     
     All_time_Sens.append([x for x in t_AllSpecieSens])
     All_tTP_AMo.append([x for x in t_T_P_AMol])
