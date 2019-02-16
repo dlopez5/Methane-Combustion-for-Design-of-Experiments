@@ -57,13 +57,10 @@ def reac_sens():
     pts=len(rows)
     t_T_P_AMol = [rows[i][0:4] for i in range(0,pts)] 
     t_T_P_AMol = reduce_resolution(t_T_P_AMol,100) 
-    
     t_SMol = [[rows[i][0],rows[i][4]] for i in range(0,pts)]  
     t_SMol = reduce_resolution(t_SMol,100) 
-    
     t_AllSpecieSens = [[rows[i][0],rows[i][5]] for i in range(0,pts)]
     t_AllSpecieSens = reduce_resolution(t_AllSpecieSens,100)
-    
     All_time_Sens.append([x for x in t_AllSpecieSens])
     All_tTP_AMo.append([x for x in t_T_P_AMol])
     return t_T_P_AMol, t_SMol, t_AllSpecieSens
@@ -100,8 +97,23 @@ def mole_fractions():
 
 
 def specific_sens():
-    """ Fills SpecificSpecieSens, includes the time and sensitivities of species of interest"""
-    #dummy name for appending SpecificSpecieSens
+    """ Fills SpecificSpecieSens, includes the time and sensitivities
+    of species of interest
+    
+    Parameters
+    ----------
+    rxns : ndarray
+        Array containing the number of available Chemical Reactions based
+        on GRI-Mech 3.0, an optimized mechanism designed to model natural 
+        gas combustion, including NO formation and reburn chemistry.
+    SpecificSpecies : list
+        List created by user to identify Species of interest.
+    t_SMol : list
+        List of lists containing time as the first element, and the 
+        corresponding mole fractions, of the chosen SpecificSpecies, as a
+        list for the second element.
+    
+    """
     row = [None]*len(SpecificSpecies)*len(rxns)
     molefrac_time=np.array([x[0] for x in t_SMol])
     for i in range(0,len(molefrac_time)):
@@ -118,14 +130,40 @@ def specific_sens():
     return SpecificSpecieSens
 
 
-def sensitivity_score():  #finds avg between max sensitivity over simulation per reaction per specie
-    """ Fills score lists"""
+def sensitivity_score():
+    """Finds avg between max sens over simulation per rxn per specie
+
+    Uses SpecificSpecieSens list as numpy array 'dataa' and dummy
+    variables 'row' and 'row1' to append score_T_P_MaxSenseavg and
+    scoretimes.
+
+    Parameters
+    ----------
+    rxns : ndarray
+        Array containing the number of available Chemical Reactions based
+        on GRI-Mech 3.0, an optimized mechanism designed to model natural 
+        gas combustion, including NO formation and reburn chemistry.
+    SpecificSpecies : list
+        List created by user to identify Species of interest.
+    
+            
+    Appends
+    -------
+    score_T_P_MaxSensavg : list
+       A list in which elements 0 and 1 corresponds to temperature,
+       pressure, and elements 2-6 correspond to the average of the sum
+       of all maximum sensitivites per rxn, per len(rxns)
+    scoretimes : list
+        A list which relates time to elements 2-len(SpecificSpecies) of
+        score_T_P_MaxSensavg.
+    
+    """
     dataa=np.absolute(np.array([x[:] for x in SpecificSpecieSens])) 
     row = [None]*(len(SpecificSpecies)+2)
     row1 = [None]*(len(SpecificSpecies))
     
-    row[0] = temp
-    row[1] = pressure*101.325     #in kPa for the plot
+    row[0] = temp                 #in K
+    row[1] = pressure*101.325     #in kPa 
     
     rxn_maxs = np.zeros(len(rxns))
     rxn_t = np.zeros(len(rxns))
@@ -134,10 +172,10 @@ def sensitivity_score():  #finds avg between max sensitivity over simulation per
         for j in range(0,len(rxns)):
             rxn_maxs[j] = max(dataa[:,i+j*len(SpecificSpecies)])
             rxn_t[j]=senstime[np.argmax(dataa[:,i+j*len(SpecificSpecies)])]
-        row[i+2] = sum(rxn_maxs)/len(rxns) #avg between max sensitivity per reaction
+        row[i+2] = sum(rxn_maxs)/len(rxns) #avg of max sensitivity per reactions
         row1[i] = sum(rxn_t)/len(rxns)
     score_T_P_MaxSensavg.append([x for x in row]) #T,P,avg between maximum sens per reaction
-    scoretimes.append([x for x in row1])
+    scoretimes.append([x for x in row1]) #what does this populate?
    
     
 def sensitivity_score2(): # finds the maximum sensitivity per reaction per specie
