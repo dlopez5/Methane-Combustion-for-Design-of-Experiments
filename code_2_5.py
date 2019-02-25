@@ -34,13 +34,54 @@ cut_time = 0 #in case a reading is too early
 
 
 def reac_sens():
-    """ Fills t_T_P_SMol_AMol_SMass_AMass and t_AllSpecieSens lists
-    t_T_P_SMol_AMol_SMass_AMass=[time, temp, press, spcificspecie moles, specificspecies mass]
-    t_AllSpecieSens=[time, sensitivites of all species to chosen rxns]"""
+    """ Function which saves simulation history.
+    
+    This function saves the different parameters through each time step
+    per simulation. Time, Temperature, Pressure, Mole Fractions, 
+    Sensitivities. It reduces the amount of information through the
+    calling of the 'reduce_resolution' function. Lastly, it seperates all
+    information into different lists to facilitate other calculations.
+    
+    Dummy Variables
+    ---------------
+    row : list
+        List which collects all information from current time step per
+        simulation.
+    rows1 : list
+        List which appends all information from 'row' to pass on to
+        'reduce resolution' function
+    rows : list
+        List which contains the reduced amount of points returned from
+        the 'reduce_resolution' function
+    
+    Appends
+    ----------
+    t_T_P_AMol : list
+        List which contains time, Temperature, Pressure, all species mole
+        fractions.
+    t_SMol : list
+        List which contains time, and 'SpecificSpecies' mole fractions
+    t_AllSpeciesSens : list
+        List which contains time, and all sensitivities of species with
+        respect to reactions available in GRI-Mecg 3.0, an optimized 
+        mechanism designed to model natural gas combustion, including 
+        NO formation and reburn chemistry.
+    All_time_Sens : list
+        List which saves time and all species sensitivities with respect
+        to reactions available in GRI-Mech 3.0 mechanism file. This list
+        is a list of lists, in which each list corresponds to a different
+        simulation or set of initial conditions.
+    All_tTP_AMo : list
+        This is another list which saves time, Temperature, Pressure, and
+        all species mole fractions. This list also is a list of lists in
+        which each individual list corresponds to a different sumulation
+        or set of initial conditions.
+    
+    """
     
     for i in rxns:
         reac.add_sensitivity_reaction(i)
-     #dummy names for appending  t_AllSpecieSens, t_T_P_SMol_AMol_SMass_AMass
+        
     row = [None]*6
     rows1=[]
     rows=[]
@@ -55,12 +96,16 @@ def reac_sens():
         rows1.append([x for x in row])
     rows = reduce_resolution(rows1,500) #isnt rows 1 always going to have a length of 1?
     pts=len(rows)
+    
     t_T_P_AMol = [rows[i][0:4] for i in range(0,pts)] 
     t_T_P_AMol = reduce_resolution(t_T_P_AMol,100) 
+    
     t_SMol = [[rows[i][0],rows[i][4]] for i in range(0,pts)]  
     t_SMol = reduce_resolution(t_SMol,100) 
+    
     t_AllSpecieSens = [[rows[i][0],rows[i][5]] for i in range(0,pts)]
     t_AllSpecieSens = reduce_resolution(t_AllSpecieSens,100)
+    
     All_time_Sens.append([x for x in t_AllSpecieSens])
     All_tTP_AMo.append([x for x in t_T_P_AMol])
     return t_T_P_AMol, t_SMol, t_AllSpecieSens
