@@ -141,14 +141,14 @@ def mole_fractions():
         being considered.
     molfrac : list
         List which contains all of the mole fractions relating to each
-        time step in the 'molfrac_time' for 'SpecificSpecies.'
+        time step in the 'molfrac_time' list for 'SpecificSpecies.'
     ppm : float
         Floating point number which will define how large the mole
         fractions should be, in ppm.
         
     Dummy Variables
     ---------------
-    row: list
+    row : list
         Dummy variable used to replace actual mole fraction values with 
         zero if they are not above the predefined 'ppm' value
         
@@ -188,8 +188,12 @@ def mole_fractions():
 
 
 def specific_sens():
-    """ Fills SpecificSpecieSens, includes the time and sensitivities
-    of species of interest
+    """ Function which zeroes sensitivity values.
+    
+    This function iterates through all of the 'SpecificSpecie' 
+    'molefrac_conditions', if the mole fractions are above the predefined
+    ppm value within the 'mole_fractions' function then the sensitivities
+    get saved, if not the sensitivities are replaced with value of 0.
     
     Parameters
     ----------
@@ -203,10 +207,49 @@ def specific_sens():
         List of lists containing time as the first element, and the 
         corresponding mole fractions, of the chosen SpecificSpecies, as a
         list for the second element.
-    
+    SpecificSpecieNumbers : list
+        List containing the index number of species in 'SpecificSpecies'
+        list with respect to the used mechanism file. (GRI - Mech 3.0).
+    molfrac_conditions : list
+        Please refer to 'mole_fractions' function.
+    sensitivities : list
+        List containing sensitivity values for all species in GRI - Mech
+        mechanism file with respect to each reaction within the same 
+        mechanism file.
+        
+    Dummy Variables
+    ---------------
+    row : list
+        Dummy variable used for iteration purposes and for appending
+        SpecificSpecieSens.
+    molfractions : list
+        List which grabs the mole fractions and time steps from the
+        molfrac_conditions list.
+    MolFractions : list
+        List which grabs the mole fraction values from molfractions list
+        defined above.
+    MolFractionsTime : list
+        List which grabs the time step values from the molfractions list
+        defined above.
+        
+    Appends
+    -------
+    SpecificSpecieSens: list
+        List which contains the sensitivities of 'SpecificSpecies.' This
+        list is dependent on the 'mole_fractions' function, if the mole
+        fractions are not above the predefined ppm value then the 
+        sensitivites get replaced with zero, otherwise they are 
+        not changed. This list is unique and depends on initial
+        conditions or mixture of current simulation. This is a list of
+        lists, each list corresponds to a specific time step and each 
+        list contains the sensitivities of the 'SpecificSpecies' per each 
+        reaction. The size of each list should be 
+        len(SpecificSpecies)*len(rxns)
+        
     """
     row = [None]*len(SpecificSpecies)*len(rxns)
     molefrac_time=np.array([x[0] for x in t_SMol])
+    
     for i in range(0,len(molefrac_time)):
         for k in range(0,len(rxns)):
             for j in range(0,len(SpecificSpecieNumbers)):
@@ -214,19 +257,19 @@ def specific_sens():
                 MolFractions = molfractions[:,0]
                 MolFractionsTime = molfractions[:,1]
                 if MolFractions[i] == 0:
-                    row[j+k*5] = 0
+                    row[j+k*len(SpecificSpecies)] = 0
                 elif MolFractions[i] != 0:
-                    row[j+k*5] = sensitivities[i,SpecificSpecieNumbers[j],k]
+                    row[j+k*len(SpecificSpecies)] = sensitivities[i,SpecificSpecieNumbers[j],k]
         SpecificSpecieSens.append([x for x in row])
     return SpecificSpecieSens
 
 
 def sensitivity_score():
-    """Finds avg between max sens over simulation per rxn per specie
+    """Ratio of sum of all maximum reaction values to number of reactions.
 
-    Uses SpecificSpecieSens list as numpy array 'dataa' and dummy
-    variables 'row' and 'row1' to append score_T_P_MaxSenseavg and
-    scoretimes.
+    This function obtains the maximum sensitivity from a complete simulation
+    per specie, per reaction, and takes the average of all maximum values
+    with respect to the number of reactions within the used mechanism file.
 
     Parameters
     ----------
@@ -236,14 +279,37 @@ def sensitivity_score():
         gas combustion, including NO formation and reburn chemistry.
     SpecificSpecies : list
         List created by user to identify Species of interest.
+        
+    Dummy Variables
+    ---------------
+    dataa : ndarray
+        N dimensional array which contains a list of lists. Each list 
+        corresponds to a different time step within a specific simulation.
+        Within each list, there are sensitivity values for each 
+        'SpecificSpecies' for each reaction within the used mechanism file.
+        The size of each list should be len(SpecificSpecies)*len(rxns)
+    row : list
+        List which contains Temperature, Pressure and the average of the 
+        found maximum sensitivities.
+    row1 : list
+        List which contains the average time at which all maximum 
+        sensitivities were found.
+    rxn_maxs : ndarray
+        N - dimensional array used to collect maximum sensitivities per
+        reaction per species throughout all time steps in current 
+        simulation results being analyzed.
+    rxn_t : ndarray
+        N - dimensional array used to store the time at which the maximum
+        sensitivities from 'rxn_maxs' occur in the simulation results.
     
             
     Appends
     -------
     score_T_P_MaxSensavg : list
-       A list in which elements 0 and 1 corresponds to temperature,
-       pressure, and elements 2-6 correspond to the average of the sum
-       of all maximum sensitivites per rxn, per len(rxns)
+       A list in which elements 0 and 1 corresponds to Temperature,
+       Pressure, and elements 2-6 correspond to the ratio of the sum
+       of all maximum sensitivites to the number of reactions in the 
+       mechanism file being used.
     scoretimes : list
         A list which relates time to elements 2-len(SpecificSpecies) of
         score_T_P_MaxSensavg.
@@ -539,8 +605,8 @@ if __name__ == "__main__":
                     sensitivities = np.absolute(np.array([x[1] for x in t_AllSpecieSens])) #sensitivities
                     molfrac_conditions=mole_fractions()
                     specific_sens()
-                    #sensitivity_score()
-                    #sensitivity_score2()
+                    sensitivity_score()
+                    sensitivity_score2()
                     rank_all(SpecificSpecieSens)
                     interested_rxn_ranking(all_ranks) 
     toc=time.time()
