@@ -45,8 +45,7 @@ def reac_sens():
     Dummy Variables
     ---------------
     row : list
-        List which collects all information from current time step per
-        simulation.
+        List which collects all information from current time step.
     rows1 : list
         List which appends all information from 'row' to pass on to
         'reduce resolution' function
@@ -55,17 +54,18 @@ def reac_sens():
         the 'reduce_resolution' function
     
     Appends
-    ----------
+    --------
     t_T_P_AMol : list
         List which contains time, Temperature, Pressure, all species mole
-        fractions.
+        fractions per simulation.
     t_SMol : list
         List which contains time, and 'SpecificSpecies' mole fractions
+        per simulation.
     t_AllSpeciesSens : list
         List which contains time, and all sensitivities of species with
-        respect to reactions available in GRI-Mecg 3.0, an optimized 
+        respect to reactions available in GRI-Mech 3.0, an optimized 
         mechanism designed to model natural gas combustion, including 
-        NO formation and reburn chemistry.
+        NO formation and reburn chemistry. List is unique per simulation.
     All_time_Sens : list
         List which saves time and all species sensitivities with respect
         to reactions available in GRI-Mech 3.0 mechanism file. This list
@@ -74,7 +74,7 @@ def reac_sens():
     All_tTP_AMo : list
         This is another list which saves time, Temperature, Pressure, and
         all species mole fractions. This list also is a list of lists in
-        which each individual list corresponds to a different sumulation
+        which each individual list corresponds to a different simulation
         or set of initial conditions.
     
     """
@@ -110,6 +110,7 @@ def reac_sens():
     All_tTP_AMo.append([x for x in t_T_P_AMol])
     return t_T_P_AMol, t_SMol, t_AllSpecieSens
 
+
 def reduce_resolution(rows1,max_pts):
    
     reduced =[]
@@ -119,24 +120,69 @@ def reduce_resolution(rows1,max_pts):
         reduced = rows1[::nth]
     else:
         reduced = rows1
-    return reduced        
+    return reduced      
+  
 
 def mole_fractions():
+    """Function which zeros mole fractions values.
+    
+    This function is checking if the mole fractions from the t_SMol
+    list are above a predefined ppm (part per million). In this case, 
+    if the mole fractions are not above one ppm then the values get
+    replaced with zeros. This will facilitate future analysis and 
+    ranking of the sensitivities to reactions of interest.
+    
+    Parameters
+    ----------
+    SpecificSpecies : list
+        List created by user to identify Species of interest.
+    molfrac_time : list
+        List which contains all of the time steps for the simulation
+        being considered.
+    molfrac : list
+        List which contains all of the mole fractions relating to each
+        time step in the 'molfrac_time' for 'SpecificSpecies.'
+    ppm : float
+        Floating point number which will define how large the mole
+        fractions should be, in ppm.
+        
+    Dummy Variables
+    ---------------
+    row: list
+        Dummy variable used to replace actual mole fraction values with 
+        zero if they are not above the predefined 'ppm' value
+        
+    Appends
+    -------
+    molfrac_conditions : list
+        List which contains current simulation mixture, Temperature,
+        Pressure, mole fractions, and time steps. This list contains
+        the updated mole fraction values after checking if they are
+        above the predefined ppm value. If they are above the ppm value,
+        they are left alone, if they are not they are replaced with 0.
+    MoleFraction : list
+        This is a list of lists. Each list is identical to the
+        information in 'molfrac_conditions' and each list corresponds   
+        to a different simulation or initial conditions.
+    
+    """
     molefrac_time=np.array([x[0] for x in t_SMol])
     molfrac = np.absolute(np.array([x[1] for x in t_SMol]))  #specific specie moles frac
-    one_ppm= 1/1000000  #mole fraction
+    ppm= 1/1000000  #one ppm
+    
     molfrac_conditions = [None]*(len(SpecificSpecies)+2)
     molfrac_conditions[0:2] = [mix,temp, pressure]
+    
     for i in range(0,len(SpecificSpecies)):
-        dummyvar=np.zeros((len(molfrac),2))
+        row=np.zeros((len(molfrac),2))
         for j in range(0,len(molfrac)):
-            if molfrac[j,i] >= one_ppm:
-                dummyvar[j,0] = molfrac[j,i]
-                dummyvar[j,1] = molefrac_time[j]
+            if molfrac[j,i] >= ppm:
+                row[j,0] = molfrac[j,i]
+                row[j,1] = molefrac_time[j]
             else:
-                dummyvar[j,0] = 0
-                dummyvar[j,1] = molefrac_time[j]
-        molfrac_conditions[i+3] = dummyvar  
+                row[j,0] = 0
+                row[j,1] = molefrac_time[j]
+        molfrac_conditions[i+3] = row  
     MoleFraction.append([x for x in molfrac_conditions])
     return molfrac_conditions
 
