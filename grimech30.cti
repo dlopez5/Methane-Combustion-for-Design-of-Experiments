@@ -1984,7 +1984,6 @@ reaction('HO2 + C3H7 => OH + C2H5 + CH2O', [2.410000e+13, 0.0, 0.0])
 
 # Reaction 325
 reaction('CH3 + C3H7 <=> 2 C2H5', [1.927000e+13, -0.32, 0.0])
-=======
 """
  GRI-Mech Version 3.0 7/30/99  CHEMKIN-II format
  See README30 file at anonymous FTP site unix.sri.com, directory gri;
