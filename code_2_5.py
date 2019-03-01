@@ -26,12 +26,9 @@ T =np.linspace(600,1000,2)
 P =np.linspace(1,30,2)
 Phi = np.linspace(0.1,2,2)
 CH4 = np.linspace(0.001,0.01,2)
-<<<<<<< HEAD
 rxns = np.linspace(0,324,325) #N + NO <=> N2 + O; N + O2 <=> NO + O; N + OH <=> NO + H
 #(0,324,325)
-=======
 rxns = np.linspace(0,324,325) 
->>>>>>> 028de85cdb2367601e7dab938048d43d0958efbc
 interested_rxns = [177, 178, 179, 239]
 SpecificSpecies = ['H2O', 'CH4', 'CO', 'CO2', 'NO']
 endtime = 5
@@ -115,7 +112,7 @@ def reac_sens():
     All_tTP_AMo.append([x for x in t_T_P_AMol])
     return t_T_P_AMol, t_SMol, t_AllSpecieSens
 
-<<<<<<< HEAD
+
 def reduce_resolution(mylist,maxlength):
     """ Reduces the number of elements in a list if the list length is greater
     than the specificed maximum. The function saves every nth term from the list 
@@ -137,25 +134,22 @@ def reduce_resolution(mylist,maxlength):
         List with a reduced resolution less than or equal to the maxlength. 
     
     """
-=======
 
 def reduce_resolution(rows1,max_pts):
    
->>>>>>> 028de85cdb2367601e7dab938048d43d0958efbc
     reduced =[]
     length=len(mylist)
     if length > maxlength:
         nth = math.ceil(length/maxlength)
         reduced = mylist[::nth]
     else:
-<<<<<<< HEAD
+
         reduced = mylist
     return reduced        
-=======
-        reduced = rows1
+
+    reduced = rows1
     return reduced      
   
->>>>>>> 028de85cdb2367601e7dab938048d43d0958efbc
 
 #def reduce_resolution_avg(rowsl,max_pts):
 #    
