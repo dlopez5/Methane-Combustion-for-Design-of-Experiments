@@ -27,6 +27,7 @@ P =np.linspace(1,30,2)
 Phi = np.linspace(0.1,2,2)
 CH4 = np.linspace(0.001,0.01,2)
 rxns = np.linspace(0,324,325) #N + NO <=> N2 + O; N + O2 <=> NO + O; N + OH <=> NO + H
+#(0,324,325)
 interested_rxns = [177, 178, 179, 239]
 SpecificSpecies = ['H2O', 'CH4', 'CO', 'CO2', 'NO']
 endtime = 5
@@ -65,16 +66,48 @@ def reac_sens():
     All_tTP_AMo.append([x for x in t_T_P_AMol])
     return t_T_P_AMol, t_SMol, t_AllSpecieSens
 
-def reduce_resolution(rows1,max_pts):
-   
+def reduce_resolution(mylist,maxlength):
+    """ Reduces the number of elements in a list if the list length is greater
+    than the specificed maximum. The function saves every nth term from the list 
+    to a new list, where n is calculated to be an optimal sequential number to 
+    evenly represent the original list. The resulting number of elements will be 
+    less than or equal to the speicified maximum. 
+    
+    Parameters 
+    ----------
+    mylist : list
+        List for which reduced resolution is desired.
+    maxlength : int
+        Integer greater than zero which sets the maximum number of elements 
+        desired in the list. 
+    
+    Returns
+    ---------
+    reduced : list 
+        List with a reduced resolution less than or equal to the maxlength. 
+    
+    """
     reduced =[]
-    pts=len(rows1)
-    if pts > max_pts:
-        nth = math.ceil(pts/max_pts)
-        reduced = rows1[::nth]
+    length=len(mylist)
+    if length > maxlength:
+        nth = math.ceil(length/maxlength)
+        reduced = mylist[::nth]
     else:
-        reduced = rows1
+        reduced = mylist
     return reduced        
+
+#def reduce_resolution_avg(rowsl,max_pts):
+#    
+#    reduced=[]
+#    pts=len(rows1)
+#    if pts > max_pts:
+#        nth = math.ceil(pts/max_pts)
+#        for i in range(0,pts-nth):
+#            for j in range(0,rows1[0])
+#        reduced = rows1[::nth]
+#    else:
+#        reduced = rows1
+#    return reduced        
 
 def mole_fractions():
     molefrac_time=np.array([x[0] for x in t_SMol])
