@@ -3970,4 +3970,3 @@ reaction('HO2 + C3H7 => OH + C2H5 + CH2O', [2.410000e+13, 0.0, 0.0])
 
 # Reaction 325
 reaction('CH3 + C3H7 <=> 2 C2H5', [1.927000e+13, -0.32, 0.0])
->>>>>>> 028de85cdb2367601e7dab938048d43d0958efbc
