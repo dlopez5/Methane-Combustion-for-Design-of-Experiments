@@ -280,7 +280,6 @@ def sensitive_rxn(mixcount, species,speciecount):
     loc = 0
     time = float(entry3.get())
     y=All_tTP_AMo[mixcount]
-#    y=All_tTP_SMo_AMo_SMa_AMa[mixcount]
     for i in range(0,len(y)-1):
         y1=y[i] #iterates through time steps of chosen simulation
         y11=y1[0] #grabs first item in above list (should be time)
@@ -389,7 +388,7 @@ def plota(mixcount, species, speciecount, rxn_, rxn__):
     sens3=[]
     sens4=[]
     y=All_time_Sens[mixcount]
-    for i in range(0,len(y)):
+    for i in range(0,len(y)-1):
         y1=y[i]
         y21=y1[0] #time
         y22=y1[1] #sensitivity
@@ -421,40 +420,40 @@ def plota(mixcount, species, speciecount, rxn_, rxn__):
         
     line.set_xdata( time)
     line.set_ydata( sens )
-    line.set_label(rxn__[0])
+    line.set_label(RR[rxn_[0]])
     line
     
     line1.set_xdata( time)
     line1.set_ydata( sens1 )
-    line1.set_label(rxn__[1])
+    line1.set_label(RR[rxn_[1]])
     line1
     
     line2.set_xdata( time)
     line2.set_ydata( sens2 )
-    line2.set_label(rxn__[2])
+    line2.set_label(RR[rxn_[2]])
     line2
     
     line3.set_xdata( time)
     line3.set_ydata( sens3 )
-    line3.set_label(rxn__[3])
+    line3.set_label(RR[rxn_[3]])
     line3
     
     line4.set_xdata( time)
     line4.set_ydata( sens4 )
-    line4.set_label(rxn__[4])
+    line4.set_label(RR[rxn_[4]])
     line4
     
     atitle= "Sensitivity Vs. t of " + species[0]
     a.set_title(atitle)
     a.legend()
-    a.axis((0-0.1*max((time)), (max((time))+0.1*max((time))), 0-0.1*max((sens)), (max((sens))+0.1*max((sens)))))
+    a.axis((0-0.1*max((time)), (max((time))+0.1*max((time))), 0-0.1*max((sens)), (max((sens))+0.6*max((sens)))))
     canvas.draw()
 
     
 
 
 #figures
-f = Figure(figsize=(11,4), dpi=100)
+f = Figure(figsize=(12,5), dpi=100)
 #first plot
 a = f.add_subplot(121)
 atitle= "Sensitivity Vs. t"
