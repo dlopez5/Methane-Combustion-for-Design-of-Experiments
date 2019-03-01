@@ -26,7 +26,7 @@ T =np.linspace(600,1000,2)
 P =np.linspace(1,30,2)
 Phi = np.linspace(0.1,2,2)
 CH4 = np.linspace(0.001,0.01,2)
-rxns = np.linspace(0,324,325) #N + NO <=> N2 + O; N + O2 <=> NO + O; N + OH <=> NO + H
+rxns = np.linspace(0,324,325) 
 interested_rxns = [177, 178, 179, 239]
 SpecificSpecies = ['H2O', 'CH4', 'CO', 'CO2', 'NO']
 endtime = 5
