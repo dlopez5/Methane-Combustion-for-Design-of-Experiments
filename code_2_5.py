@@ -134,8 +134,6 @@ def reduce_resolution(mylist,maxlength):
         List with a reduced resolution less than or equal to the maxlength. 
     
     """
-
-def reduce_resolution(rows1,max_pts):
    
     reduced =[]
     length=len(mylist)
