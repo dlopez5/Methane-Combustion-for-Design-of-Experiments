@@ -144,9 +144,7 @@ def reduce_resolution(mylist,maxlength):
 
         reduced = mylist
     return reduced        
-
-    reduced = rows1
-    return reduced      
+    
   
 
 #def reduce_resolution_avg(rowsl,max_pts):
