@@ -339,7 +339,6 @@ def sensitivity_score():
         N - dimensional array used to store the time at which the maximum
         sensitivities from 'rxn_maxs' occur in the simulation results.
     
-            
     Appends
     -------
     score_T_P_MaxSensavg : list
