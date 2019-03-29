@@ -34,7 +34,7 @@ delta_T = 100
 ppm= 1/1000000  #one ppm
 
 
-def reac_sens():
+def reac_sens(gas1):
     """ Function which saves simulation history.
     
     This function saves the different parameters through each time step
@@ -89,7 +89,7 @@ def reac_sens():
     
     while sim.time < endtime and sim.time >= cut_time:
         row[0] = sim.step()          #save time
-        row[1:3] = reac.thermo.TP     #save T, P
+        row[1:3] = gas1.TP     #save T, P 
         row[3] = gas1[gas1.species_names].X # save mole fraction value of all species
         row[4] = gas1[SpecificSpecies].X   #save molesfrac value of specific species
         ssensitivities = sim.sensitivities() #sensitivities
@@ -487,7 +487,7 @@ if __name__ == "__main__":
                     #initialize parameters
                     SpecificSpecieSens = []   #list of sens of interest per rxn
                     all_ranks = []
-                    [t_T_P_AMol, t_SMol, t_AllSpecieSens]= reac_sens()
+                    [t_T_P_AMol, t_SMol, t_AllSpecieSens]= reac_sens(gas1)
                     temp_condition=T_limit(t_T_P_AMol,temp,delta_T)
                     if temp_condition == 1:
                         del All_tTP_AMo[-1]
