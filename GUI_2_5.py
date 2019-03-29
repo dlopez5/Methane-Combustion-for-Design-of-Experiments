@@ -377,6 +377,7 @@ def plotb(mixcount, speciecount,rxncount,species):
     
     b.legend()
     b.axis((0-0.1*maxtime, maxtime+0.1*maxtime, 0-0.1*maxX, maxX+0.1*maxX))
+    b.ticklabel_format(axis='y', style='sci', scilimits=(2, -3))
     canvas.draw()
     
 
@@ -418,6 +419,7 @@ def plota(mixcount, species, speciecount, rxn_, rxn__):
     if max(sens4)> maxX:
         maxX=max(sense4)
         
+        
     line.set_xdata( time)
     line.set_ydata( sens )
     line.set_label(RR[rxn_[0]])
@@ -447,6 +449,7 @@ def plota(mixcount, species, speciecount, rxn_, rxn__):
     a.set_title(atitle)
     a.legend()
     a.axis((0-0.1*max((time)), (max((time))+0.1*max((time))), 0-0.1*max((sens)), (max((sens))+0.6*max((sens)))))
+    a.ticklabel_format(axis='y', style='sci', scilimits=(2, -3))
     canvas.draw()
 
     
