@@ -31,6 +31,7 @@ SpecificSpecies = ['H2O', 'CH4', 'CO', 'CO2', 'NO']
 endtime = 5
 cut_time = 0 #in case a reading is too early 
 delta_T = 100
+ppm= 1/1000000  #one ppm
 
 
 def reac_sens():
@@ -192,7 +193,6 @@ def mole_fractions():
     """
     molefrac_time=np.array([x[0] for x in t_SMol])
     molfrac = np.absolute(np.array([x[1] for x in t_SMol]))  #specific specie moles frac
-    ppm= 1/1000000  #one ppm
     
     molfrac_conditions = [None]*(len(SpecificSpecies)+2)
     molfrac_conditions[0:2] = [mix,temp, pressure]
