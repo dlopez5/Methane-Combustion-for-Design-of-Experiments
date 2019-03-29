@@ -20,8 +20,8 @@ import time
 #from statistics import mode
 cantera.suppress_thermo_warnings()
 
-T =np.linspace(600,1000,2)
-P =np.linspace(1,30,2)
+T = np.linspace(600,1000,2)
+P = np.linspace(1,30,2)
 Phi = np.linspace(0.1,2,2)
 CH4 = np.linspace(0.001,0.01,2)
 rxns = np.linspace(177,239,63) #N + NO <=> N2 + O; N + O2 <=> NO + O; N + OH <=> NO + H
@@ -79,7 +79,6 @@ def reac_sens(gas1):
         or set of initial conditions.
     
     """
-    
     for i in rxns:
         reac.add_sensitivity_reaction(i)
         
@@ -475,14 +474,15 @@ if __name__ == "__main__":
             for temp in T:
                 for pressure in P:
                     #set state 1atm <= P <= 30atm, 1atm = 101325 Pa
-                    gas1.TP = temp, pressure*101325           
+                    gas1.TPX = temp, pressure*101325, mix     
                     #set gas compsotion; X - mole fraction;  Y - mass fraction
                     #gas1.X= 'CH4:0.05, O2:0.2, N2:0.75'
-                    gas1.X= mix
+#                    gas1.X= mix
+#                    print(gas1.P)
                     #create 0D - simulation objects
     #               reac = cantera.IdealGasReactor(gas1)
     #               reac = cantera.ConstPressureReactor(gas1)
-                    reac = cantera.IdealGasConstPressureReactor(gas1)
+                    reac = cantera.IdealGasConstPressureReactor(gas1, name=None, energy='on')
                     sim = cantera.ReactorNet([reac])
                     #initialize parameters
                     SpecificSpecieSens = []   #list of sens of interest per rxn
