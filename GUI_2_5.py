@@ -7,7 +7,7 @@ Created on Fri Sep 28 14:04:17 2018
 """
 import numpy as np
 import matplotlib
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
 from matplotlib.figure import Figure
 from matplotlib import style
 
@@ -487,7 +487,7 @@ line1_4, = b.plot([], [], "g:")
 line1_5, = b.plot([], [], "m|")
 
         
-toolbar = NavigationToolbar2TkAgg(canvas, botFrame)
+toolbar = NavigationToolbar2Tk(canvas, botFrame)
 toolbar.update()
 canvas._tkcanvas.pack(side=tk.TOP, fill=tk.BOTH, expand = True)
 
