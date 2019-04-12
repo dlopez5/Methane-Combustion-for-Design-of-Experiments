@@ -129,16 +129,14 @@ botFrame.pack()
 label1 = tk.Label(topFrame, text="Temperature [K]", font=LARGE_FONT)
 label1.grid(row=1,column=0)
 var1=tk.StringVar()
-set1 = tk.OptionMenu(topFrame,var1, T[0],T[1])#, T[2], T[3],T[4], T[5],
-                            #T[6],T[7], T[8], T[9])
+set1 = tk.OptionMenu(topFrame,var1, *T)
 set1.configure(font=LARGE_FONT)
 set1.grid(row=1,column=1)
        
 label2 = tk.Label(topFrame, text="Pressure [atm]", font=LARGE_FONT)
 label2.grid(row=1,column=3)
 var2=tk.StringVar()
-set2 = tk.OptionMenu(topFrame,var2, P[0], P[1])#, P[2], P[3], P[4], P[5],
-                             #P[6], P[7], P[8], P[9])
+set2 = tk.OptionMenu(topFrame,var2, *P)
 set2.configure(font=LARGE_FONT)
 set2.grid(row=1,column=4)
        
@@ -146,14 +144,14 @@ set2.grid(row=1,column=4)
 label3 = tk.Label(topFrame, text="Equivalence Ratio", font=LARGE_FONT)
 label3.grid(row=2,column=0)
 var3=tk.StringVar()
-set3 = tk.OptionMenu(topFrame,var3, Phi[0], Phi[1])
+set3 = tk.OptionMenu(topFrame,var3, *Phi)
 set3.configure(font=LARGE_FONT)
 set3.grid(row=2,column=1)
 
 label4 = tk.Label(topFrame, text="Fuel", font=LARGE_FONT)
 label4.grid(row=2,column=3)
 var4=tk.StringVar()
-set4 = tk.OptionMenu(topFrame,var4, CH4[0], CH4[1])
+set4 = tk.OptionMenu(topFrame,var4, *CH4)
 set4.configure(font=LARGE_FONT)
 set4.grid(row=2,column=4)
      
@@ -161,51 +159,27 @@ label5 = tk.Label(topFrame, text="Species", font=LARGE_FONT)
 label5.grid(row=3,column=0)
 
 var5=tk.StringVar()
-set5 = tk.OptionMenu(topFrame,var5, SS[0], SS[1], SS[2], SS[3], SS[4])
+set5 = tk.OptionMenu(topFrame,var5, *SS)
 set5.configure(font=LARGE_FONT)
 set5.grid(row=3,column=1)
 
 var6=tk.StringVar()
-set6 = tk.OptionMenu(topFrame,var6, S[0], S[1], S[2], S[3], S[4], S[5], S[6],
-                     S[7], S[8], S[9], S[10], S[11], S[12], S[13], S[14], S[15],
-                     S[16], S[17], S[18], S[19], S[20], S[21], S[22], S[23],
-                     S[24], S[25], S[26], S[27], S[28], S[29], S[30], S[31], 
-                     S[32], S[33], S[34], S[35], S[36], S[37], S[38], S[39],
-                     S[40], S[41], S[42], S[43], S[44], S[45], S[46], S[47],
-                     S[48], S[49], S[50], S[51], S[52])
+set6 = tk.OptionMenu(topFrame,var6, *S)
 set6.configure(font=LARGE_FONT)
 set6.grid(row=3,column=2)
 
 var7=tk.StringVar()
-set7 = tk.OptionMenu(topFrame,var7, S[0], S[1], S[2], S[3], S[4], S[5], S[6],
-                     S[7], S[8], S[9], S[10], S[11], S[12], S[13], S[14], S[15],
-                     S[16], S[17], S[18], S[19], S[20], S[21], S[22], S[23],
-                     S[24], S[25], S[26], S[27], S[28], S[29], S[30], S[31], 
-                     S[32], S[33], S[34], S[35], S[36], S[37], S[38], S[39],
-                     S[40], S[41], S[42], S[43], S[44], S[45], S[46], S[47],
-                     S[48], S[49], S[50], S[51], S[52])
+set7 = tk.OptionMenu(topFrame,var7, *S)
 set7.configure(font=LARGE_FONT)
 set7.grid(row=3,column=3)
 
 var8=tk.StringVar()
-set8 = tk.OptionMenu(topFrame,var8, S[0], S[1], S[2], S[3], S[4], S[5], S[6],
-                     S[7], S[8], S[9], S[10], S[11], S[12], S[13], S[14], S[15],
-                     S[16], S[17], S[18], S[19], S[20], S[21], S[22], S[23],
-                     S[24], S[25], S[26], S[27], S[28], S[29], S[30], S[31], 
-                     S[32], S[33], S[34], S[35], S[36], S[37], S[38], S[39],
-                     S[40], S[41], S[42], S[43], S[44], S[45], S[46], S[47],
-                     S[48], S[49], S[50], S[51], S[52])
+set8 = tk.OptionMenu(topFrame,var8, *S)
 set8.configure(font=LARGE_FONT)
 set8.grid(row=3,column=4)
 
 var9=tk.StringVar()
-set9 = tk.OptionMenu(topFrame,var9, S[0], S[1], S[2], S[3], S[4], S[5], S[6],
-                     S[7], S[8], S[9], S[10], S[11], S[12], S[13], S[14], S[15],
-                     S[16], S[17], S[18], S[19], S[20], S[21], S[22], S[23],
-                     S[24], S[25], S[26], S[27], S[28], S[29], S[30], S[31], 
-                     S[32], S[33], S[34], S[35], S[36], S[37], S[38], S[39],
-                     S[40], S[41], S[42], S[43], S[44], S[45], S[46], S[47],
-                     S[48], S[49], S[50], S[51], S[52])
+set9 = tk.OptionMenu(topFrame,var9, *S)
 set9.configure(font=LARGE_FONT)
 set9.grid(row=3,column=5)
         
