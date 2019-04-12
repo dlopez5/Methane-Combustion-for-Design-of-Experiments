@@ -272,10 +272,7 @@ def specific_sens():
     """
     row = [None]*len(SpecificSpecies)*len(rxns)
     molefrac_time=np.array([x[0] for x in t_SMol])
-   # rxn_temp=np.array([x[:,1] for x in t_T_P_Amol])
     for i in range(0,len(molefrac_time)):
-        #if rxn_temp[i]-temp > T_lim: 
-          #  row=
         for k in range(0,len(rxns)):
             for j in range(0,len(SpecificSpecieNumbers)):
                 molfractions=molfrac_conditions[3+j]
