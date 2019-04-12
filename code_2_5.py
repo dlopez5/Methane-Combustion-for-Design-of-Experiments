@@ -20,16 +20,25 @@ import time
 #from statistics import mode
 cantera.suppress_thermo_warnings()
 
-T = np.linspace(600,1000,2)
-P = np.linspace(1,30,2)
-Phi = np.linspace(0.1,2,2)
-CH4 = np.linspace(0.001,0.01,2)
-rxns = np.linspace(177,239,63) #N + NO <=> N2 + O; N + O2 <=> NO + O; N + OH <=> NO + H
-#(0,324,325) 
-interested_rxns = [177, 178, 179, 239]
-SpecificSpecies = ['H2O', 'CH4', 'CO', 'CO2', 'NO']
+####Set experiment parameters
+mechanism='grimech30.cti'  #Mechanism file
+#Parameters for main loop
+T = np.linspace(600,1000,2) #Temperature [K]
+P = np.linspace(1,30,2)  #Pressure [atm]
+Phi = np.linspace(0.1,2,2)  #Equivalence ratio
+Fuel = np.linspace(0.001,0.01,2)  #Fuel mole fraction 
+#Parameters for mixture
+fuel_name = 'CH4'  #chemical formula of fuel
+#fuel C(x)H(y)O(z)
+x=1  #moles of carbon in fuel
+y=4  #moles of hydrogen in fuel 
+z=0  #moles of oxygen in fuel
+diluent_name = 'N2'  #chemical formula of diluent
+rxns = np.linspace(177,239,63)
+#(0,324,325) full rxn set
+SpecificSpecies = ['H2O', 'CH4', 'CO', 'CO2', 'NO']  #Species of interest for rxn ranking data 
+starttime = 0 #in case a reading is too early 
 endtime = 5
-cut_time = 0 #in case a reading is too early 
 delta_T = 100
 ppm= 1/1000000  #one ppm
 
@@ -431,14 +440,14 @@ def ranks_possible(sval):
     return ranks
 
 
-def progress_track(CH4,methane,Phi,phi):
+def progress_track(Fuel,fuel,Phi,phi):
     """Prints the progress status of the code runtime as a percentage based on the 
     iteration of the CH4 parameter."""
-    CH4_list= CH4.tolist()
+    Fuel_list= Fuel.tolist()
     Phi_list= Phi.tolist()
-    CH4_iteration= CH4_list.index(methane)
+    Fuel_iteration= Fuel_list.index(fuel)
     Phi_iteration=Phi_list.index(phi)
-    progress= str(round((CH4_iteration+len(CH4)*Phi_iteration)/(len(Phi)*len(CH4))*100))
+    progress= str(round((Fuel_iteration+len(Fuel)*Phi_iteration)/(len(Phi)*len(Fuel))*100))
     print(progress+'%')
 
         
@@ -459,17 +468,18 @@ if __name__ == "__main__":
     All_tTP_AMo=[]
     tic=time.time()
     #create gas object
-    gas1 = cantera.Solution('grimech30.cti') #53 species, 325 reactions
+    gas1 = cantera.Solution(mechanism) #53 species, 325 reactions
     names=gas1.species_names
     SpecificSpecieNumbers=[names.index(speci) for speci in SpecificSpecies]
+    a = x+y/4-z/2  #molar oxygen-fuel ratio 
     for phi in Phi:
-        for methane in CH4:
-            oxygen = 2/phi*methane
-            n2 = 1 - oxygen - methane
-            if n2<0:
+        for fuel in Fuel:
+            oxygen =a/phi*fuel
+            diluent = 1 - oxygen - fuel
+            if diluent<0:
                continue 
-            mix={'CH4':methane, 'O2':oxygen, 'N2': n2}
-            progress_track(CH4,methane,Phi,phi)
+            mix={fuel_name:fuel, 'O2':oxygen, diluent_name: diluent}
+            progress_track(Fuel,fuel,Phi,phi)
             
             for temp in T:
                 for pressure in P:
