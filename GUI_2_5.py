@@ -151,7 +151,7 @@ set3.grid(row=2,column=1)
 label4 = tk.Label(topFrame, text="Fuel", font=LARGE_FONT)
 label4.grid(row=2,column=3)
 var4=tk.StringVar()
-set4 = tk.OptionMenu(topFrame,var4, *CH4)
+set4 = tk.OptionMenu(topFrame,var4, *Fuel)
 set4.configure(font=LARGE_FONT)
 set4.grid(row=2,column=4)
      
@@ -182,15 +182,6 @@ var9=tk.StringVar()
 set9 = tk.OptionMenu(topFrame,var9, *S)
 set9.configure(font=LARGE_FONT)
 set9.grid(row=3,column=5)
-        
-label6 = tk.Label(topFrame, text="Rxn # (1 - 325)", font=LARGE_FONT)
-label6.grid(row=4,column=0)
-
-entry1=tk.Entry(topFrame,width=5)
-entry1.grid(row=4,column=1)
-
-entry2=tk.Entry(topFrame,width=5)
-entry2.grid(row=4,column=2)
 
 label7 = tk.Label(topFrame, text="Time [s], (1 - 5)", font=LARGE_FONT)
 label7.grid(row=5,column=0)
@@ -203,31 +194,26 @@ def do():
     Temp = float(var1.get())
     Press = float(var2.get())
     phi = float(var3.get())
-    Fuel = float(var4.get())
+    fuell = float(var4.get())
     specie1 = var5.get() 
     specie2 = var6.get()
     specie3 = var7.get()
     specie4 = var8.get()
     specie5 = var9.get()
     species =[specie1,specie2,specie3,specie4,specie5]
-    oxygen = 2/phi*Fuel
-    nitrogen = 1 - oxygen - Fuel
-    mixture={'CH4':Fuel, 'O2':oxygen, 'N2': nitrogen} 
-    rxncount = int(entry1.get())-1
-    entry2=tk.Entry(topFrame,width=5)
-    entry2.grid(row=4,column=2)
-    entryText = tk.StringVar()
-    entryText.set(RR[rxncount])
-    entry2 = tk.Entry(topFrame, textvariable = entryText)
-    entry2.grid(row=4,column=2)
-    
+    a = x+y/4-z/2 #molar oxygen-fuel ratio
+    oxygen =a/phi*fuell
+    diluent = 1 - oxygen - fuell
+    mixture={fuel_name:fuell, 'O2':oxygen, diluent_name: diluent}
+    print(mixture)
     for i in range(0,len(MoleFraction)):
-        x=MoleFraction[i]
-        x1=x[0]
-        x2=x[1]
-        x3=x[2]
+        xx=MoleFraction[i]
+        x1=xx[0]
+        x2=xx[1]
+        x3=xx[2]
         if mixture == x1 and Temp == x2 and Press == x3:
             mixcount = i
+    print(mixcount)
     speciecount=[0,0,0,0,0]
     for i in range(0, len(S)):
         if specie1 == S[i]:
@@ -240,10 +226,7 @@ def do():
             speciecount[3] = i
         if specie5 == S[i]:
             speciecount[4] = i
-#    print(speciecount)
-    print(mixcount)
-#    plota(mixcount, speciecount,rxncount,specie1)
-    plotb(mixcount, speciecount,rxncount,species)
+    plotb(mixcount, speciecount,species)
     sensitive_rxn(mixcount,species,speciecount)
    
 button1 = tk.Button(topFrame, text="Plot it!", command=do)
@@ -285,7 +268,7 @@ def sensitive_rxn(mixcount, species,speciecount):
     plota(mixcount, species, speciecount, rxn_, rxn__)
 
     
-def plotb(mixcount, speciecount,rxncount,species):
+def plotb(mixcount, speciecount,species):
     time=[]
     molfrac1=[]
     molfrac2=[]

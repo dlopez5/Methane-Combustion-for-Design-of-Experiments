@@ -26,7 +26,7 @@ mechanism='grimech30.cti'  #Mechanism file
 T = np.linspace(600,1000,2) #Temperature [K]
 P = np.linspace(1,30,2)  #Pressure [atm]
 Phi = np.linspace(0.1,2,2)  #Equivalence ratio
-Fuel = np.linspace(0.001,0.01,2)  #Fuel mole fraction 
+Fuel = np.linspace(0.001,0.01,2)#Fuel mole fraction 
 #Parameters for mixture
 fuel_name = 'CH4'  #chemical formula of fuel
 #fuel C(x)H(y)O(z)
@@ -34,7 +34,7 @@ x=1  #moles of carbon in fuel
 y=4  #moles of hydrogen in fuel 
 z=0  #moles of oxygen in fuel
 diluent_name = 'N2'  #chemical formula of diluent
-rxns = np.linspace(177,239,63)
+rxns = np.linspace(0,324,325)
 #(0,324,325) full rxn set
 SpecificSpecies = ['H2O', 'CH4', 'CO', 'CO2', 'NO']  #Species of interest for rxn ranking data 
 starttime = 0 #in case a reading is too early 
@@ -95,7 +95,7 @@ def reac_sens(gas1):
     rows1=[]
     rows=[]
     
-    while sim.time < endtime and sim.time >= cut_time:
+    while sim.time < endtime and sim.time >= starttime:
         row[0] = sim.step()          #save time
         row[1:3] = gas1.TP     #save T, P 
         row[3] = gas1[gas1.species_names].X # save mole fraction value of all species
@@ -272,11 +272,8 @@ def specific_sens():
         fractions are not above the predefined ppm value then the 
         sensitivites get replaced with zero, otherwise they are 
         not changed. This list is unique and depends on initial
-        conditions or mixture of current simulation. This is a list of
-        lists, each list corresponds to a specific time step and each 
-        list contains the sensitivities of the 'SpecificSpecies' per each 
-        reaction. The size of each list should be 
-        len(SpecificSpecies)*len(rxns)
+        conditions or mixture of current simulation. The size of this 
+        list should be len(SpecificSpecies)*len(rxns).
         
     """
     row = [None]*len(SpecificSpecies)*len(rxns)
@@ -284,7 +281,7 @@ def specific_sens():
     for i in range(0,len(molefrac_time)):
         for k in range(0,len(rxns)):
             for j in range(0,len(SpecificSpecieNumbers)):
-                molfractions=molfrac_conditions[3+j]
+                molfractions = molfrac_conditions[3+j]
                 MolFractions = molfractions[:,0]
                 MolFractionsTime = molfractions[:,1]
                 if MolFractions[i] == 0:
@@ -481,14 +478,11 @@ if __name__ == "__main__":
             for temp in T:
                 for pressure in P:
                     #set state 1atm <= P <= 30atm, 1atm = 101325 Pa
-                    gas1.TPX = temp, pressure*101325, mix     
                     #set gas compsotion; X - mole fraction;  Y - mass fraction
-                    #gas1.X= 'CH4:0.05, O2:0.2, N2:0.75'
-#                    gas1.X= mix
-#                    print(gas1.P)
+                    gas1.TPX = temp, pressure*101325, mix     
                     #create 0D - simulation objects
-    #               reac = cantera.IdealGasReactor(gas1)
-    #               reac = cantera.ConstPressureReactor(gas1)
+                    #reac = cantera.IdealGasReactor(gas1)
+                    #reac = cantera.ConstPressureReactor(gas1)
                     reac = cantera.IdealGasConstPressureReactor(gas1, name=None, energy='on')
                     sim = cantera.ReactorNet([reac])
                     #initialize parameters
